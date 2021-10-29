@@ -1,4 +1,4 @@
-package com.udacity.asteroidradar
+package com.udacity.asteroidradar.utils
 
 /**
  * The static class to contain all constants.

@@ -4,6 +4,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 
+/**
+ * The kotlin file to contain all binding adapter function to be used in the xml file.
+ * */
+
 @BindingAdapter("statusIcon")
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {

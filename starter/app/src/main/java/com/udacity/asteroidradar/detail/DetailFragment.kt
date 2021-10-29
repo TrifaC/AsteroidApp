@@ -17,8 +17,7 @@ class DetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val binding = FragmentDetailBinding.inflate(inflater)
-        initBinding()
+        initBinding(inflater)
         initClickListener()
         return binding.root
     }
@@ -26,13 +25,12 @@ class DetailFragment : Fragment() {
 
 //************************************* Initialization *********************************************
 
-    private fun initBinding() {
+    private fun initBinding(inflater: LayoutInflater) {
+        binding = FragmentDetailBinding.inflate(inflater)
         // Connect the class with XML UI.
         binding.lifecycleOwner = this
-
         // Get the Data from the list fragment.
-        val asteroid = DetailFragmentArgs.fromBundle(arguments!!).selectedAsteroid
-
+        val asteroid = DetailFragmentArgs.fromBundle(requireArguments()).selectedAsteroid
         // asteroid is the data binding in the detail fragment.
         binding.asteroid = asteroid
     }

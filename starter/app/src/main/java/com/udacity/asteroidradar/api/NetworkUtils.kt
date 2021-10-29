@@ -8,15 +8,22 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
+    // After doing the request, the near earth objects contains the object of the asteroid list.
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
 
+    // Create a asteroid list to contain the asteroid item.
     val asteroidList = ArrayList<Asteroid>()
 
+    // get the next 7 days
     val nextSevenDaysFormattedDates = getNextSevenDaysFormattedDates()
+
     for (formattedDate in nextSevenDaysFormattedDates) {
+        // Get the asteroid item according to the date.
         val dateAsteroidJsonArray = nearEarthObjectsJson.getJSONArray(formattedDate)
 
+        // There are asteroids inside the array in a asteroid array objection.
         for (i in 0 until dateAsteroidJsonArray.length()) {
+            // The object contains an asteroid.
             val asteroidJson = dateAsteroidJsonArray.getJSONObject(i)
             val id = asteroidJson.getLong("id")
             val codename = asteroidJson.getString("name")
@@ -33,8 +40,10 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
             val isPotentiallyHazardous = asteroidJson
                 .getBoolean("is_potentially_hazardous_asteroid")
 
+            // Insert the items into the asteroid object.
             val asteroid = Asteroid(id, codename, formattedDate, absoluteMagnitude,
                 estimatedDiameter, relativeVelocity, distanceFromEarth, isPotentiallyHazardous)
+            // Insert the asteroid object into the list.
             asteroidList.add(asteroid)
         }
     }

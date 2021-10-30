@@ -9,6 +9,9 @@ import com.udacity.asteroidradar.R
  * The kotlin file to contain all binding adapter function to be used in the xml file.
  * */
 
+/**
+ * Input isHazardous then showing the icon according to the value. (Main Page)
+ * */
 @BindingAdapter("statusIcon")
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
@@ -18,6 +21,9 @@ fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
     }
 }
 
+/**
+ * Input isHazardous then showing the image according to the value. (Detail Page)
+ * */
 @BindingAdapter("asteroidStatusImage")
 fun bindDetailsStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {

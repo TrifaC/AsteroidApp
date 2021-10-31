@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,11 +10,19 @@ import com.udacity.asteroidradar.data.Asteroid
  * The View Model to store data in main fragment.
  * */
 class MainViewModel : ViewModel() {
+    companion object {
+        private const val LOG_TAG: String = "MainViewModel"
+    }
 
     // The test list for asteroids.
     private val _testAsteroidList = MutableLiveData<ArrayList<Asteroid>>()
     val testAsteroidList: LiveData<ArrayList<Asteroid>>
         get() = _testAsteroidList
+
+    // The navigation action to detail page.\
+    private val _navigateToDetail = MutableLiveData<Asteroid?>()
+    val navigateToDetail: LiveData<Asteroid?>
+        get() = _navigateToDetail
 
     init {
         _testAsteroidList.value = initTestAsteroidList()
@@ -22,6 +31,15 @@ class MainViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
     }
+
+    fun onAsteroidClicked(asteroid: Asteroid) {
+        _navigateToDetail.value = asteroid
+    }
+
+    fun doneNavigation() {
+        _navigateToDetail.value = null
+    }
+
 
     private fun initTestAsteroidList(): ArrayList<Asteroid> {
         val asteroidItem1 = Asteroid(1, "Name:1.1", "Date:1.1.1", 1.0, 1.0, 1.0, 1.0, true)
@@ -35,4 +53,5 @@ class MainViewModel : ViewModel() {
         defaultList.add(asteroidItem4)
         return defaultList
     }
+
 }

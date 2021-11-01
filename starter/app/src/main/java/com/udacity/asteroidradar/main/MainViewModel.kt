@@ -51,7 +51,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * Method to get data from NASA, the success and failure response functions are defined.
      * */
     private fun getAsteroidFeedProperties() {
-        AsteroidAPI.retrofitService.getProperties().enqueue( object: retrofit2.Callback<String> {
+        AsteroidAPI.retrofitService.getProperties("2021-09-07", "2021-09-8").enqueue( object: retrofit2.Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 _asteroidResponse.value = response.body()
                 Log.d(LOG_TAG, "The result is ${_asteroidResponse.value}")
@@ -60,7 +60,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 _asteroidResponse.value = "Failure: ${t.message}"
             }
-
         })
     }
 

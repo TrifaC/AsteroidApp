@@ -5,10 +5,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 private const val BASE_URL = "https://api.nasa.gov/"
+private const val FEED_PATH = "neo/rest/v1/feed"
 private const val API_KEY = "TnzN4s3EaWSja1w0KpYs5LfuKT1h8KkhxPz4Xgve"
-private const val TEST_QUERY = "neo/rest/v1/feed?start_date=2021-09-07&end_date=2021-09-13&api_key=TnzN4s3EaWSja1w0KpYs5LfuKT1h8KkhxPz4Xgve"
 
 /**
  * Use the Retrofit builder to build a retrofit object using a Moshi converter with our Moshi
@@ -28,8 +29,12 @@ interface AsteroidAPIService {
      * The @GET annotation indicates that the "realestate" endpoint will be requested with the GET
      * HTTP method
      */
-    @GET(TEST_QUERY)
-    fun getProperties(): Call<String>
+    @GET(FEED_PATH)
+    fun getProperties(
+        @Query("start_date") startDate: String,
+        @Query("end_date") endDate: String,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Call<String>
 }
 
 /**

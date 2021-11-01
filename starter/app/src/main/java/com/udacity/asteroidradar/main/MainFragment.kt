@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.main
 
+import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -21,6 +22,7 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentMainBinding
+    private lateinit var application: Application
     private lateinit var adapter: AsteroidAdapter
     private lateinit var viewModel: MainViewModel
     private lateinit var viewModelFactory: MainViewModelFactory
@@ -28,6 +30,7 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+        application = requireNotNull(this.activity).application
         initBindingAndVM()
         initAdapter()
         initVMConnection()
@@ -40,10 +43,10 @@ class MainFragment : Fragment() {
 
 
     private fun initBindingAndVM() {
-        viewModelFactory = MainViewModelFactory()
+        viewModelFactory = MainViewModelFactory(application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
         binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+        binding.lifecycleOwner = this
     }
 
     private fun initAdapter() {
@@ -55,9 +58,9 @@ class MainFragment : Fragment() {
 
     private fun initVMConnection() {
         viewModel.testAsteroidList.observe(viewLifecycleOwner, Observer { adapter.submitList(it) } )
-        viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer {
-            this.view?.findNavController()?.navigate(MainFragmentDirections.actionShowDetail(it))
-            viewModel.doneNavigation()
+        viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer { asteroid -> asteroid?.let {
+            this.view?.findNavController()?.navigate(MainFragmentDirections.actionShowDetail(asteroid))
+            viewModel.doneNavigation() }
         })
     }
 

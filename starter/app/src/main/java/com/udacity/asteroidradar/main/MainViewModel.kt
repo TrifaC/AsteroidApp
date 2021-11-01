@@ -1,15 +1,15 @@
 package com.udacity.asteroidradar.main
 
-import android.util.Log
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.udacity.asteroidradar.data.Asteroid
 
 /**
  * The View Model to store data in main fragment.
  * */
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
         private const val LOG_TAG: String = "MainViewModel"
     }

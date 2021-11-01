@@ -1,10 +1,15 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.udacity.asteroidradar.api.AsteroidAPI
 import com.udacity.asteroidradar.data.Asteroid
+import retrofit2.Call
+import retrofit2.Response
+import javax.security.auth.callback.Callback
 
 /**
  * The View Model to store data in main fragment.
@@ -19,18 +24,49 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val testAsteroidList: LiveData<ArrayList<Asteroid>>
         get() = _testAsteroidList
 
-    // The navigation action to detail page.\
+    // The navigation action to detail page.
     private val _navigateToDetail = MutableLiveData<Asteroid?>()
     val navigateToDetail: LiveData<Asteroid?>
         get() = _navigateToDetail
 
+    // The response from NASA API.
+    private val _asteroidResponse = MutableLiveData<String?>()
+    val asteroidResponse: LiveData<String?>
+        get() = _asteroidResponse
+
+
+//------------------------------------- Init Block -------------------------------------------------
+
+
     init {
         _testAsteroidList.value = initTestAsteroidList()
+        getAsteroidFeedProperties()
     }
 
-    override fun onCleared() {
-        super.onCleared()
+
+//------------------------------------- Network Functions ------------------------------------------
+
+
+    /**
+     * Method to get data from NASA, the success and failure response functions are defined.
+     * */
+    private fun getAsteroidFeedProperties() {
+        AsteroidAPI.retrofitService.getProperties().enqueue( object: retrofit2.Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                _asteroidResponse.value = response.body()
+                Log.d(LOG_TAG, "The result is ${_asteroidResponse.value}")
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                _asteroidResponse.value = "Failure: ${t.message}"
+            }
+
+        })
     }
+
+
+//------------------------------------- Event Trigger Functions ------------------------------------
+
 
     fun onAsteroidClicked(asteroid: Asteroid) {
         _navigateToDetail.value = asteroid
@@ -39,6 +75,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun doneNavigation() {
         _navigateToDetail.value = null
     }
+
+
+//------------------------------------- View Model Lifecycle Function ------------------------------
+
+    override fun onCleared() {
+        super.onCleared()
+    }
+
+
+//------------------------------------- Test Function-----------------------------------------------
 
 
     private fun initTestAsteroidList(): ArrayList<Asteroid> {

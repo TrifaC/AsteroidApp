@@ -28,11 +28,11 @@ interface AsteroidAPIService {
      * HTTP method
      */
     @GET(Constants.FEED_PATH)
-    fun getProperties(
-        @Query("start_date") startDate: String,
-        @Query("end_date") endDate: String,
+    suspend fun getProperties(
+        @Query("start_date") startDate: String = getDatePairString().first,
+        @Query("end_date") endDate: String = getDatePairString().second,
         @Query("api_key") apiKey: String = Constants.API_KEY
-    ): Call<String>
+    ): String
 }
 
 /**

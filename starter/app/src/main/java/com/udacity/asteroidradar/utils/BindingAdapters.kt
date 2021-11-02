@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.utils
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -49,4 +50,21 @@ fun bindTextViewToKmUnit(textView: TextView, number: Double) {
 fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
     val context = textView.context
     textView.text = String.format(context.getString(R.string.km_s_unit_format), number)
+}
+
+@BindingAdapter("asteroidAPIStatus")
+fun bindAsteroidAPIStatus(textView: TextView, status: AsteroidAPIStatus) {
+    when (status) {
+        AsteroidAPIStatus.LOADING -> {
+            textView.visibility = View.VISIBLE
+            textView.text = "Loading the data."
+        }
+        AsteroidAPIStatus.DONE -> {
+            textView.visibility = View.GONE
+        }
+        AsteroidAPIStatus.ERROR -> {
+            textView.visibility = View.VISIBLE
+            textView.text = "Something error in data fetching."
+        }
+    }
 }

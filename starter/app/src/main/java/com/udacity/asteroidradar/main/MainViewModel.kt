@@ -5,10 +5,14 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.api.AsteroidAPI
+import com.udacity.asteroidradar.api.getDatePairString
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.data.Asteroid
+import com.udacity.asteroidradar.utils.AsteroidAPIStatus
 import com.udacity.asteroidradar.utils.Constants
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
@@ -32,6 +36,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val responseAsteroidList: LiveData<ArrayList<Asteroid>?>
         get() = _responseAsteroidList
 
+    // The status of asteroid request
+    private val _apiStatus = MutableLiveData<AsteroidAPIStatus>()
+    val apiStatus: LiveData<AsteroidAPIStatus>
+        get() = _apiStatus
+
 
 //------------------------------------- Init Block -------------------------------------------------
 
@@ -48,21 +57,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * Method to get data from NASA, the success and failure response functions are defined.
      * */
     private fun getAsteroidFeedProperties() {
-        AsteroidAPI.retrofitService.getProperties(
-            Constants.DEFAULT_TEST_START_DAY,
-            Constants.DEFAULT_TEST_END_DAY
-        ).enqueue(object : retrofit2.Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                Log.d(LOG_TAG, "Get the response: ${response.body()}")
-                val tmpJSONObject: JSONObject = JSONObject(response.body()!!)
+        viewModelScope.launch {
+            _apiStatus.value = AsteroidAPIStatus.LOADING
+            try {
+                val listResult = AsteroidAPI.retrofitService.getProperties()
+                val tmpJSONObject: JSONObject = JSONObject(listResult)
                 _responseAsteroidList.value = parseAsteroidsJsonResult(tmpJSONObject)
-            }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d(LOG_TAG, "Failure: ${t.message}")
+                _apiStatus.value = AsteroidAPIStatus.DONE
+            } catch (e: Exception) {
                 _responseAsteroidList.value = null
+                _apiStatus.value = AsteroidAPIStatus.ERROR
             }
-        })
+        }
     }
 
 

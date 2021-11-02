@@ -11,6 +11,4 @@ object Constants {
     const val FEED_PATH = "neo/rest/v1/feed"
     const val API_KEY = "TnzN4s3EaWSja1w0KpYs5LfuKT1h8KkhxPz4Xgve"
 
-    const val DEFAULT_TEST_START_DAY = "2021-11-02"
-    const val DEFAULT_TEST_END_DAY = "2021-11-09"
 }

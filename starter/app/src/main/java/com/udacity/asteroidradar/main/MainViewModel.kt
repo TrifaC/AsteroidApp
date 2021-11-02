@@ -6,7 +6,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.udacity.asteroidradar.api.AsteroidAPI
+import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.data.Asteroid
+import com.udacity.asteroidradar.utils.Constants
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import javax.security.auth.callback.Callback
@@ -19,27 +22,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         private const val LOG_TAG: String = "MainViewModel"
     }
 
-    // The test list for asteroids.
-    private val _testAsteroidList = MutableLiveData<ArrayList<Asteroid>>()
-    val testAsteroidList: LiveData<ArrayList<Asteroid>>
-        get() = _testAsteroidList
-
     // The navigation action to detail page.
     private val _navigateToDetail = MutableLiveData<Asteroid?>()
     val navigateToDetail: LiveData<Asteroid?>
         get() = _navigateToDetail
 
-    // The response from NASA API.
-    private val _asteroidResponse = MutableLiveData<String?>()
-    val asteroidResponse: LiveData<String?>
-        get() = _asteroidResponse
+    // Response asteroid list
+    private val _responseAsteroidList = MutableLiveData<ArrayList<Asteroid>?>()
+    val responseAsteroidList: LiveData<ArrayList<Asteroid>?>
+        get() = _responseAsteroidList
 
 
 //------------------------------------- Init Block -------------------------------------------------
 
 
     init {
-        _testAsteroidList.value = initTestAsteroidList()
         getAsteroidFeedProperties()
     }
 
@@ -51,14 +48,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * Method to get data from NASA, the success and failure response functions are defined.
      * */
     private fun getAsteroidFeedProperties() {
-        AsteroidAPI.retrofitService.getProperties("2021-09-07", "2021-09-8").enqueue( object: retrofit2.Callback<String> {
+        AsteroidAPI.retrofitService.getProperties(
+            Constants.DEFAULT_TEST_START_DAY,
+            Constants.DEFAULT_TEST_END_DAY
+        ).enqueue(object : retrofit2.Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
-                _asteroidResponse.value = response.body()
-                Log.d(LOG_TAG, "The result is ${_asteroidResponse.value}")
+                Log.d(LOG_TAG, "Get the response: ${response.body()}")
+                val tmpJSONObject: JSONObject = JSONObject(response.body()!!)
+                _responseAsteroidList.value = parseAsteroidsJsonResult(tmpJSONObject)
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
-                _asteroidResponse.value = "Failure: ${t.message}"
+                Log.d(LOG_TAG, "Failure: ${t.message}")
+                _responseAsteroidList.value = null
             }
         })
     }
@@ -78,25 +80,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 //------------------------------------- View Model Lifecycle Function ------------------------------
 
+
     override fun onCleared() {
         super.onCleared()
     }
 
-
-//------------------------------------- Test Function-----------------------------------------------
-
-
-    private fun initTestAsteroidList(): ArrayList<Asteroid> {
-        val asteroidItem1 = Asteroid(1, "Name:1.1", "Date:1.1.1", 1.0, 1.0, 1.0, 1.0, true)
-        val asteroidItem2 = Asteroid(2, "Name:2.1", "Date:2.1.1", 1.0, 1.0, 1.0, 1.0, false)
-        val asteroidItem3 = Asteroid(3, "Name:3.1", "Date:3.1.1", 1.0, 1.0, 1.0, 1.0, true)
-        val asteroidItem4 = Asteroid(4, "Name:4.1", "Date:4.1.1", 1.0, 1.0, 1.0, 1.0, false)
-        val defaultList = ArrayList<Asteroid>()
-        defaultList.add(asteroidItem1)
-        defaultList.add(asteroidItem2)
-        defaultList.add(asteroidItem3)
-        defaultList.add(asteroidItem4)
-        return defaultList
-    }
 
 }

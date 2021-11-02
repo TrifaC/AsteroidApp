@@ -57,7 +57,7 @@ class MainFragment : Fragment() {
     }
 
     private fun initVMConnection() {
-        viewModel.testAsteroidList.observe(viewLifecycleOwner, Observer { adapter.submitList(it) } )
+        viewModel.responseAsteroidList.observe(viewLifecycleOwner, Observer { adapter.submitList(it) } )
         viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer { asteroid -> asteroid?.let {
             this.view?.findNavController()?.navigate(MainFragmentDirections.actionShowDetail(asteroid))
             viewModel.doneNavigation() }

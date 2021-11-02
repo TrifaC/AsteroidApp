@@ -1,7 +1,9 @@
 package com.udacity.asteroidradar.api
 
+import android.util.Log
 import com.udacity.asteroidradar.data.Asteroid
 import com.udacity.asteroidradar.utils.Constants
+import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,8 +20,8 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     val nextSevenDaysFormattedDates = getNextSevenDaysFormattedDates()
 
     for (formattedDate in nextSevenDaysFormattedDates) {
-        // Get the asteroid item according to the date.
-        val dateAsteroidJsonArray = nearEarthObjectsJson.getJSONArray(formattedDate)
+        //Get the asteroid item according to the date.
+        val dateAsteroidJsonArray: JSONArray = nearEarthObjectsJson.getJSONArray(formattedDate)
 
         // There are asteroids inside the array in a asteroid array objection.
         for (i in 0 until dateAsteroidJsonArray.length()) {
@@ -47,13 +49,11 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
             asteroidList.add(asteroid)
         }
     }
-
     return asteroidList
 }
 
 private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
     val formattedDateList = ArrayList<String>()
-
     val calendar = Calendar.getInstance()
     for (i in 0..Constants.DEFAULT_END_DATE_DAYS) {
         val currentTime = calendar.time
@@ -61,6 +61,5 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
         formattedDateList.add(dateFormat.format(currentTime))
         calendar.add(Calendar.DAY_OF_YEAR, 1)
     }
-
     return formattedDateList
 }

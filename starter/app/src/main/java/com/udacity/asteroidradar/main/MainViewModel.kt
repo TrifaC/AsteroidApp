@@ -1,22 +1,16 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.api.AsteroidAPI
-import com.udacity.asteroidradar.api.getDatePairString
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.data.Asteroid
-import com.udacity.asteroidradar.utils.AsteroidAPIStatus
-import com.udacity.asteroidradar.utils.Constants
+import com.udacity.asteroidradar.data.AsteroidAPIStatus
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Response
-import javax.security.auth.callback.Callback
 
 /**
  * The View Model to store data in main fragment.

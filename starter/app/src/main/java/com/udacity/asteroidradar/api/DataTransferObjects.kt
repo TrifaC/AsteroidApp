@@ -1,0 +1,58 @@
+package com.udacity.asteroidradar.api
+
+import com.squareup.moshi.JsonClass
+import com.udacity.asteroidradar.data.Asteroid
+import com.udacity.asteroidradar.database.DatabaseAsteroid
+
+/**
+ * The data transfer object is used to parsing responses from the server
+ * or formatting objects then sending to server. The DTO should convert to domain objects before
+ * using then
+ * */
+
+@JsonClass(generateAdapter = true)
+data class NetworkAsteroidContainer(val asteroids: ArrayList<NetworkAsteroid>)
+
+@JsonClass(generateAdapter = true)
+data class NetworkAsteroid(
+    val id: Long,
+    val codename: String,
+    val closeApproachDate: String,
+    val absoluteMagnitude: Double,
+    val estimatedDiameter: Double,
+    val relativeVelocity: Double,
+    val distanceFromEarth: Double,
+    val isPotentiallyHazardous: Boolean
+)
+
+/** Convert Network results to database objects */
+fun NetworkAsteroidContainer.asDomainModel(): ArrayList<Asteroid> {
+    return asteroids.map {
+        Asteroid(
+            id = it.id,
+            codename = it.codename,
+            closeApproachDate = it.closeApproachDate,
+            absoluteMagnitude = it.absoluteMagnitude,
+            estimatedDiameter = it.estimatedDiameter,
+            relativeVelocity = it.relativeVelocity,
+            distanceFromEarth = it.distanceFromEarth,
+            isPotentiallyHazardous = it.isPotentiallyHazardous
+        )
+    } as ArrayList<Asteroid>
+}
+
+/** Convert the DTO to database objects */
+fun NetworkAsteroidContainer.asDatabaseModel(): List<DatabaseAsteroid> {
+    return asteroids.map {
+        DatabaseAsteroid(
+            id = it.id,
+            codename = it.codename,
+            closeApproachDate = it.closeApproachDate,
+            absoluteMagnitude = it.absoluteMagnitude,
+            estimatedDiameter = it.estimatedDiameter,
+            relativeVelocity = it.relativeVelocity,
+            distanceFromEarth = it.distanceFromEarth,
+            isPotentiallyHazardous = it.isPotentiallyHazardous
+        )
+    }
+}

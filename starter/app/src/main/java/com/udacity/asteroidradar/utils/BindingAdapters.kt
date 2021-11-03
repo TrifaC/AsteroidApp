@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.udacity.asteroidradar.R
+import com.udacity.asteroidradar.data.AsteroidAPIStatus
 
 /**
  * The kotlin file to contain all binding adapter function to be used in the xml file.

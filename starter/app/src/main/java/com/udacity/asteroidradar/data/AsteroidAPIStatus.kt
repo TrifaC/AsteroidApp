@@ -1,4 +1,4 @@
-package com.udacity.asteroidradar.utils
+package com.udacity.asteroidradar.data
 
 /**
  * The class represent the status of requesting data with Asteroid API.

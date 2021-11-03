@@ -23,7 +23,7 @@ class AsteroidsRepository(private val database: AsteroidDatabase) {
      * The list of asteroid will be shown in the screen.
      * */
     val asteroids: LiveData<List<Asteroid>> =
-        Transformations.map(database.asteroidDao.getAsteroids()) {it.asDomainModel()}
+        Transformations.map(database.asteroidDao.getAsteroids()) { it.asDomainModel() }
 
     /**
      * Refresh the asteroid stored in the offline cache.

@@ -31,7 +31,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() = _navigateToDetail
 
 
-
 //------------------------------------- Init Block -------------------------------------------------
 
 
@@ -40,6 +39,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             asteroidsRepository.refreshVideos()
         }
     }
+
     val responseAsteroidList = asteroidsRepository.asteroids
 
 

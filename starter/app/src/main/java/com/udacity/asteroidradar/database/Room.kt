@@ -13,13 +13,13 @@ interface AsteroidDao {
      * Return the list of asteroids from database.
      * Add live data which make the data can update automatically.
      * */
-    @Query ("select * from databaseasteroidentity")
+    @Query("select * from databaseasteroidentity")
     fun getAsteroids(): LiveData<List<DatabaseAsteroidEntity>>
 
     /**
      * Insert the asteroid data into local data base.
      * */
-    @Insert(onConflict =  OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg asteroids: DatabaseAsteroidEntity)
 }
 
@@ -39,9 +39,11 @@ private lateinit var INSTANCE: AsteroidDatabase
 fun getDatabase(mContext: Context): AsteroidDatabase {
     synchronized(AsteroidDatabase::class.java) {
         if (!::INSTANCE.isInitialized) {
-            INSTANCE = Room.databaseBuilder(mContext.applicationContext,
+            INSTANCE = Room.databaseBuilder(
+                mContext.applicationContext,
                 AsteroidDatabase::class.java,
-                "asteroids").build()
+                "asteroids"
+            ).build()
         }
     }
     return INSTANCE

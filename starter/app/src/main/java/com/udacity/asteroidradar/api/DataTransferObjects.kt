@@ -14,18 +14,6 @@ import org.json.JSONObject
 @JsonClass(generateAdapter = true)
 data class NetworkAsteroidContainer(val asteroidListString: String)
 
-@JsonClass(generateAdapter = true)
-data class NetworkAsteroid(
-    val id: Long,
-    val codename: String,
-    val closeApproachDate: String,
-    val absoluteMagnitude: Double,
-    val estimatedDiameter: Double,
-    val relativeVelocity: Double,
-    val distanceFromEarth: Double,
-    val isPotentiallyHazardous: Boolean
-)
-
 /** Convert Network results to database objects */
 fun NetworkAsteroidContainer.asDomainModel(): ArrayList<Asteroid> {
     val tmpJSONObject: JSONObject = JSONObject(asteroidListString)

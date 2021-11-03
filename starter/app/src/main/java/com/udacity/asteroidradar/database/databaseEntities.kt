@@ -27,6 +27,7 @@ fun List<DatabaseAsteroidEntity>.asDomainModel(): List<Asteroid> {
             estimatedDiameter = it.estimatedDiameter,
             relativeVelocity = it.relativeVelocity,
             distanceFromEarth = it.distanceFromEarth,
-            isPotentiallyHazardous = it.isPotentiallyHazardous)
+            isPotentiallyHazardous = it.isPotentiallyHazardous
+        )
     }
 }

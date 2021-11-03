@@ -3,15 +3,13 @@ package com.udacity.asteroidradar.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.api.AsteroidAPI
-import com.udacity.asteroidradar.api.NetworkAsteroidContainer
-import com.udacity.asteroidradar.api.asDatabaseModel
-import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
+import com.udacity.asteroidradar.api.dto.NetworkAsteroidContainer
+import com.udacity.asteroidradar.api.dto.asDatabaseModel
 import com.udacity.asteroidradar.data.Asteroid
 import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.database.asDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 
 /**
  * The repository hides the complexity of managing the interactions between the database and the

@@ -17,6 +17,7 @@ data class DatabaseAsteroidEntity constructor(
     val isPotentiallyHazardous: Boolean
 )
 
+
 fun List<DatabaseAsteroidEntity>.asDomainModel(): List<Asteroid> {
     return map {
         Asteroid(
@@ -31,3 +32,4 @@ fun List<DatabaseAsteroidEntity>.asDomainModel(): List<Asteroid> {
         )
     }
 }
+

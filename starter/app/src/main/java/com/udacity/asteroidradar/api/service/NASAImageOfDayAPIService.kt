@@ -2,6 +2,7 @@ package com.udacity.asteroidradar.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.udacity.asteroidradar.api.dto.NetworkNASAImageContainer
 import com.udacity.asteroidradar.data.PictureOfDay
 import com.udacity.asteroidradar.utils.Constants
 import retrofit2.Retrofit
@@ -28,7 +29,7 @@ interface NASAImageOfDayAPIService {
     @GET(Constants.IMAGE_PATH)
     suspend fun getImageInfo(
         @Query("api_key") apiKey: String = Constants.API_KEY
-    ): PictureOfDay
+    ): NetworkNASAImageContainer
 
 }
 

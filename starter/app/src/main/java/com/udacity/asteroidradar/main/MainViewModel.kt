@@ -1,18 +1,24 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.api.AsteroidAPI
+import com.udacity.asteroidradar.api.NASAImageOfDayAPI
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.data.Asteroid
 import com.udacity.asteroidradar.data.AsteroidAPIStatus
+import com.udacity.asteroidradar.data.PictureOfDay
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import timber.log.Timber
+import java.lang.Exception
+import java.util.*
 
 /**
  * The View Model to store data in main fragment.
@@ -29,7 +35,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _navigateToDetail = MutableLiveData<Asteroid?>()
     val navigateToDetail: LiveData<Asteroid?>
         get() = _navigateToDetail
-
 
 //------------------------------------- Init Block -------------------------------------------------
 
@@ -52,14 +57,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun doneNavigation() {
         _navigateToDetail.value = null
-    }
-
-
-//------------------------------------- View Model Lifecycle Function ------------------------------
-
-
-    override fun onCleared() {
-        super.onCleared()
     }
 
 

@@ -9,8 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import com.squareup.picasso.Picasso
 
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
@@ -62,6 +62,9 @@ class MainFragment : Fragment() {
             this.view?.findNavController()?.navigate(MainFragmentDirections.actionShowDetail(asteroid))
             viewModel.doneNavigation() }
         })
+        viewModel.pictureOfDay.observe(viewLifecycleOwner, Observer { picture -> picture?.let {
+            Picasso.get().load(picture.url).into(binding.activityMainImageOfTheDay)
+        } })
     }
 
 

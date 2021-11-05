@@ -36,16 +36,37 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val navigateToDetail: LiveData<Asteroid?>
         get() = _navigateToDetail
 
+    private val _pictureOfTodayEntity = MutableLiveData<PictureOfDay?>()
+    val pictureOfDay: LiveData<PictureOfDay?>
+        get() = _pictureOfTodayEntity
+
 //------------------------------------- Init Block -------------------------------------------------
 
 
     init {
-        viewModelScope.launch {
-            asteroidsRepository.refreshVideos()
-        }
+        getPictureOfDayProperty()
+//        viewModelScope.launch {
+//            asteroidsRepository.refreshVideos()
+//        }
     }
 
     val responseAsteroidList = asteroidsRepository.asteroids
+
+
+//------------------------------------- Image Update Function --------------------------------------
+
+
+    private fun getPictureOfDayProperty() {
+        viewModelScope.launch {
+            try {
+                _pictureOfTodayEntity.value = NASAImageOfDayAPI.retrofitService.getImageInfo()
+                Timber.d("The url of image is " + _pictureOfTodayEntity.value)
+            } catch (e: Exception) {
+                _pictureOfTodayEntity.value = null
+                Timber.d("The error is " + e.message)
+            }
+        }
+    }
 
 
 //------------------------------------- Event Trigger Functions ------------------------------------

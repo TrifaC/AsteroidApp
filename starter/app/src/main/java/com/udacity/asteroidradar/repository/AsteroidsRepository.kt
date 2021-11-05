@@ -28,7 +28,7 @@ class AsteroidsRepository(private val database: AsteroidDatabase) {
      * */
     suspend fun refreshVideos() {
         withContext(Dispatchers.IO) {
-            val tmplistResult = AsteroidAPI.retrofitService.getAsteroidsList()
+            val tmplistResult = AsteroidAPI.retrofitService.getAsteroidsListAsync().await()
             val networkContainer = NetworkAsteroidContainer(tmplistResult)
             database.asteroidDao.insertAll(*networkContainer.asDatabaseModel())
         }

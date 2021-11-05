@@ -44,7 +44,7 @@ class AsteroidRadarApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(Timber.DebugTree())
-        delayInit()
+        //Timber.plant(Timber.DebugTree())
+        //delayInit()
     }
 }

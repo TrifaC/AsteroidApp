@@ -1,9 +1,11 @@
 package com.udacity.asteroidradar.api
 
+import android.util.Log
 import com.udacity.asteroidradar.data.Asteroid
 import com.udacity.asteroidradar.utils.Constants
 import org.json.JSONArray
 import org.json.JSONObject
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -13,6 +15,7 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
     val dateList = nearEarthObjectsJson.keys()
     val dateListSorted = dateList.asSequence().sorted()
+    Timber.i("The data list is " + dateListSorted)
     dateListSorted.forEach {
         val key: String = it
         val dateAsteroidJsonArray = nearEarthObjectsJson.getJSONArray(key)
@@ -45,18 +48,6 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
         }
     }
     return asteroidList
-}
-
-private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
-    val formattedDateList = ArrayList<String>()
-    val calendar = Calendar.getInstance()
-    for (i in 0..Constants.DEFAULT_END_DATE_DAYS) {
-        val currentTime = calendar.time
-        val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
-        formattedDateList.add(dateFormat.format(currentTime))
-        calendar.add(Calendar.DAY_OF_YEAR, 1)
-    }
-    return formattedDateList
 }
 
 fun getDatePairString(): Pair<String,String> {

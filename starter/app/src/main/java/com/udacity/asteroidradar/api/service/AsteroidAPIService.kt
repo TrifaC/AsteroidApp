@@ -4,10 +4,12 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.udacity.asteroidradar.api.dto.NetworkAsteroidContainer
 import com.udacity.asteroidradar.utils.Constants
 import kotlinx.coroutines.Deferred
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.util.concurrent.TimeUnit
 
 /**
  * A public interface that exposes the [getAsteroidsListAsync] method
@@ -31,6 +33,14 @@ interface AsteroidAPIService {
  */
 object AsteroidAPI {
     /**
+     * The client is used to extend the time of fetching the Asteroid Data.
+     * */
+    private val client = OkHttpClient.Builder()
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS)
+
+    /**
      * Use the Retrofit builder to build a retrofit object using a Moshi converter with our Moshi
      * object pointing to the desired URL
      */
@@ -38,6 +48,7 @@ object AsteroidAPI {
         .addConverterFactory(ScalarsConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .baseUrl(Constants.BASE_URL)
+        .client(client.build())
         .build()
 
     val retrofitService: AsteroidAPIService = retrofit.create(AsteroidAPIService::class.java)

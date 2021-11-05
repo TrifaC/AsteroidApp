@@ -1,24 +1,18 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.udacity.asteroidradar.api.AsteroidAPI
 import com.udacity.asteroidradar.api.NASAImageOfDayAPI
-import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.data.Asteroid
-import com.udacity.asteroidradar.data.AsteroidAPIStatus
 import com.udacity.asteroidradar.data.PictureOfDay
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import timber.log.Timber
 import java.lang.Exception
-import java.util.*
 
 /**
  * The View Model to store data in main fragment.
@@ -45,9 +39,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         getPictureOfDayProperty()
-//        viewModelScope.launch {
-//            asteroidsRepository.refreshVideos()
-//        }
+        viewModelScope.launch {
+            asteroidsRepository.refreshAsteroid()
+        }
     }
 
     val responseAsteroidList = asteroidsRepository.asteroids

@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.api
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.udacity.asteroidradar.api.dto.NetworkAsteroidContainer
 import com.udacity.asteroidradar.utils.Constants
 import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
@@ -22,7 +23,7 @@ interface AsteroidAPIService {
         @Query("start_date") startDate: String = getDatePairString().first,
         @Query("end_date") endDate: String = getDatePairString().second,
         @Query("api_key") apiKey: String = Constants.API_KEY
-    ): Deferred<String>
+    ): String
 }
 
 /**

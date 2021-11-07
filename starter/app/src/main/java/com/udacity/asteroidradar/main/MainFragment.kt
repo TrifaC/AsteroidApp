@@ -2,17 +2,16 @@ package com.udacity.asteroidradar.main
 
 import android.app.Application
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.squareup.picasso.Picasso
-
 import com.udacity.asteroidradar.R
+import com.udacity.asteroidradar.api.isNetworkAvailable
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -35,6 +34,7 @@ class MainFragment : Fragment() {
         initAdapter()
         initVMConnection()
         setHasOptionsMenu(true)
+        checkInternet()
         return binding.root
     }
 
@@ -42,6 +42,9 @@ class MainFragment : Fragment() {
 //************************************* Initialization *********************************************
 
 
+    /**
+     * Data Binding and View Model.
+     * */
     private fun initBindingAndVM() {
         viewModelFactory = MainViewModelFactory(application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
@@ -63,8 +66,17 @@ class MainFragment : Fragment() {
             viewModel.doneNavigation() }
         })
         viewModel.pictureOfDay.observe(viewLifecycleOwner, Observer { picture -> picture?.let {
-            Picasso.get().load(picture.url).into(binding.activityMainImageOfTheDay)
+            Picasso.with(context).load(picture.url).into(binding.activityMainImageOfTheDay)
         } })
+    }
+
+    private fun checkInternet() {
+        if(isNetworkAvailable(context)) {
+            Toast.makeText(context, "Fetching Data......", Toast.LENGTH_SHORT).show()
+            viewModel.getAppDataProperty()
+        } else {
+            Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show()
+        }
     }
 
 

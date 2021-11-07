@@ -12,7 +12,6 @@ import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.Exception
 
 /**
  * The View Model to store data in main fragment.
@@ -30,35 +29,31 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val navigateToDetail: LiveData<Asteroid?>
         get() = _navigateToDetail
 
+    // The picture of today to show in the banner.
     private val _pictureOfTodayEntity = MutableLiveData<PictureOfDay?>()
     val pictureOfDay: LiveData<PictureOfDay?>
         get() = _pictureOfTodayEntity
 
+
+
+
 //------------------------------------- Init Block -------------------------------------------------
 
-
     init {
-        getPictureOfDayProperty()
-        viewModelScope.launch {
-            asteroidsRepository.refreshAsteroid()
-        }
+        getAppDataProperty()
     }
-
     val responseAsteroidList = asteroidsRepository.asteroids
 
 
 //------------------------------------- Image Update Function --------------------------------------
 
 
-    private fun getPictureOfDayProperty() {
+    fun getAppDataProperty() {
         viewModelScope.launch {
             try {
+                asteroidsRepository.refreshAsteroid()
                 _pictureOfTodayEntity.value = NASAImageOfDayAPI.retrofitService.getImageInfo()
-                Timber.d("The url of image is " + _pictureOfTodayEntity.value)
-            } catch (e: Exception) {
-                _pictureOfTodayEntity.value = null
-                Timber.d("The error is " + e.message)
-            }
+            } catch (e: Exception) { }
         }
     }
 

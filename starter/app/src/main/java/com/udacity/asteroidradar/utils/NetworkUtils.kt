@@ -1,21 +1,30 @@
 package com.udacity.asteroidradar.api
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.util.Log
 import com.udacity.asteroidradar.data.Asteroid
 import com.udacity.asteroidradar.utils.Constants
-import org.json.JSONArray
 import org.json.JSONObject
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * The method to parse the JSON object.
+ *
+ * @param jsonResult The result parsed from the Internet.
+ * @return a arraylist which will be shown in the main fragment asteroid list.
+ * */
 fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
+    // Prepare to sequence the JSON Object.
     val asteroidList = ArrayList<Asteroid>()
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
     val dateList = nearEarthObjectsJson.keys()
     val dateListSorted = dateList.asSequence().sorted()
-    Timber.i("The data list is " + dateListSorted)
+    // Get each date then doing parsing.
     dateListSorted.forEach {
         val key: String = it
         val dateAsteroidJsonArray = nearEarthObjectsJson.getJSONArray(key)
@@ -50,6 +59,11 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     return asteroidList
 }
 
+/**
+ * Get the start date and end date pair.
+ *
+ * @return Pair<startDate, endDate>
+ * */
 fun getDatePairString(): Pair<String,String> {
     val calendar = Calendar.getInstance()
     val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
@@ -57,4 +71,37 @@ fun getDatePairString(): Pair<String,String> {
     calendar.add(Calendar.DAY_OF_YEAR, 7)
     val endDate = calendar.time
     return Pair(dateFormat.format(startDate), dateFormat.format(endDate))
+}
+
+/**
+ * Check whether the network is available or not.
+ *
+ * @param context is the XXX
+ * @return True -> There is a Internet, False -> Cannot connect to internet.
+ * */
+fun isNetworkAvailable(context: Context?): Boolean {
+    if (context == null) return false
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            when {
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+                    return true
+                }
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+                    return true
+                }
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
+                    return true
+                }
+            }
+        }
+    } else {
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
+            return true
+        }
+    }
+    return false
 }

@@ -50,7 +50,7 @@ object AsteroidAPI {
         .baseUrl(Constants.BASE_URL)
         .client(client.build())
         .build()
-
-    val retrofitService: AsteroidAPIService = retrofit.create(AsteroidAPIService::class.java)
+    val retrofitService:
+ AsteroidAPIService = retrofit.create(AsteroidAPIService::class.java)
 }
 

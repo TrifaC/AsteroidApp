@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.api.isNetworkAvailable
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import kotlinx.coroutines.processNextEventInCurrentThread
 
 class MainFragment : Fragment() {
 
@@ -34,7 +35,6 @@ class MainFragment : Fragment() {
         initAdapter()
         initVMConnection()
         setHasOptionsMenu(true)
-        checkInternet()
         return binding.root
     }
 
@@ -67,16 +67,11 @@ class MainFragment : Fragment() {
         })
         viewModel.pictureOfDay.observe(viewLifecycleOwner, Observer { picture -> picture?.let {
             Picasso.with(context).load(picture.url).into(binding.activityMainImageOfTheDay)
+            //Picasso.get().load(picture.url).into(binding.activityMainImageOfTheDay)
         } })
-    }
-
-    private fun checkInternet() {
-        if(isNetworkAvailable(context)) {
-            Toast.makeText(context, "Fetching Data......", Toast.LENGTH_SHORT).show()
-            viewModel.getAppDataProperty()
-        } else {
-            Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show()
-        }
+        viewModel.stateInfoShowing.observe(viewLifecycleOwner, Observer { stateInfo -> stateInfo?.let {
+            Toast.makeText(context, stateInfo, Toast.LENGTH_SHORT).show()
+        } })
     }
 
 

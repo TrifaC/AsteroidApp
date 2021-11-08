@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.api.NASAImageOfDayAPI
+import com.udacity.asteroidradar.api.isNetworkAvailable
 import com.udacity.asteroidradar.data.Asteroid
 import com.udacity.asteroidradar.data.PictureOfDay
 import com.udacity.asteroidradar.database.getDatabase
@@ -34,6 +35,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val pictureOfDay: LiveData<PictureOfDay?>
         get() = _pictureOfTodayEntity
 
+    // The string to inform user
+    private val _stateInfoShowing = MutableLiveData<String?>()
+    val stateInfoShowing: LiveData<String?>
+        get() = _stateInfoShowing
+
 
 
 
@@ -48,12 +54,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 //------------------------------------- Image Update Function --------------------------------------
 
 
-    fun getAppDataProperty() {
-        viewModelScope.launch {
-            try {
-                asteroidsRepository.refreshAsteroid()
-                _pictureOfTodayEntity.value = NASAImageOfDayAPI.retrofitService.getImageInfo()
-            } catch (e: Exception) { }
+    private fun getAppDataProperty() {
+        if(isNetworkAvailable(getApplication())) {
+            viewModelScope.launch {
+                try {
+                    _stateInfoShowing.value = "Fetching Internet Data......"
+                    asteroidsRepository.refreshAsteroid()
+                    _pictureOfTodayEntity.value = NASAImageOfDayAPI.retrofitService.getImageInfo()
+                } catch (e: Exception) {
+                    _stateInfoShowing.value = "Error Happen In Fetching Internet Data."
+                }
+            }
+        } else {
+            _stateInfoShowing.value = "No Internet Connection."
         }
     }
 

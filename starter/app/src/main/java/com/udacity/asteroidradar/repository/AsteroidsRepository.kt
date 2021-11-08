@@ -6,6 +6,7 @@ import com.udacity.asteroidradar.api.AsteroidAPI
 import com.udacity.asteroidradar.api.dto.NetworkAsteroidContainer
 import com.udacity.asteroidradar.api.dto.asDatabaseModel
 import com.udacity.asteroidradar.data.Asteroid
+import com.udacity.asteroidradar.data.AsteroidAPIFilter
 import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.database.asDomainModel
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,7 @@ class AsteroidsRepository(private val database: AsteroidDatabase) {
         Transformations.map(database.asteroidDao.getAsteroids()) { it.asDomainModel() }
 
     /**
-     * Refresh the asteroid stored in the offline cache.
+     * Get data from Internet and refresh the asteroid stored in the offline cache.
      * */
     suspend fun refreshAsteroid() {
         withContext(Dispatchers.IO) {

@@ -18,6 +18,7 @@
             android:id="@+id/activity_main_image_of_the_day_layout"
             android:layout_width="364dp"
             android:layout_height="0dp"
+            android:contentDescription="@{viewModel.pictureOfDay.title}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -35,12 +36,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="#55010613"
+                style="@style/picture_of_day_title"
                 android:padding="16dp"
-                android:text="@string/image_of_the_day"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:text="@{viewModel.pictureOfDay.title}" />
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView

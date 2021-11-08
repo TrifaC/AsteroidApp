@@ -59,6 +59,13 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     return asteroidList
 }
 
+fun getTodayDateString(): String {
+    val calendar = Calendar.getInstance()
+    val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
+    val today = calendar.time
+    return dateFormat.format(today)
+}
+
 /**
  * Get the start date and end date pair.
  *

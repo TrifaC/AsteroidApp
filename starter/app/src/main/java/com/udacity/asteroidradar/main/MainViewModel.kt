@@ -6,8 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.api.NASAImageOfDayAPI
+import com.udacity.asteroidradar.api.getTodayDateString
 import com.udacity.asteroidradar.api.isNetworkAvailable
 import com.udacity.asteroidradar.data.Asteroid
+import com.udacity.asteroidradar.data.AsteroidAPIFilter
 import com.udacity.asteroidradar.data.PictureOfDay
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidsRepository
@@ -24,6 +26,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val database = getDatabase(application)
     private val asteroidsRepository = AsteroidsRepository(database)
+    private var currentListFilter = AsteroidAPIFilter.SAVED
 
     // The navigation action to detail page.
     private val _navigateToDetail = MutableLiveData<Asteroid?>()
@@ -40,33 +43,68 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val stateInfoShowing: LiveData<String?>
         get() = _stateInfoShowing
 
-
+    // The list contain the data will show in the asteroid list
+    private val _asteroidList = MutableLiveData<List<Asteroid>>()
+    val asteroidList: LiveData<List<Asteroid>>
+        get() = _asteroidList
 
 
 //------------------------------------- Init Block -------------------------------------------------
 
+
     init {
         getAppDataProperty()
     }
-    val responseAsteroidList = asteroidsRepository.asteroids
+
+    private val responseAsteroidList = asteroidsRepository.asteroids
 
 
 //------------------------------------- Image Update Function --------------------------------------
 
 
     private fun getAppDataProperty() {
-        if(isNetworkAvailable(getApplication())) {
+        if (isNetworkAvailable(getApplication())) {
             viewModelScope.launch {
                 try {
                     _stateInfoShowing.value = "Fetching Internet Data......"
                     asteroidsRepository.refreshAsteroid()
-                    _pictureOfTodayEntity.value = NASAImageOfDayAPI.retrofitService.getImageInfo()
+                    val tmpPictureOfDay = NASAImageOfDayAPI.retrofitService.getImageInfo()
+                    if (tmpPictureOfDay.mediaType != "image") {
+                        _pictureOfTodayEntity.value = PictureOfDay(
+                            "image",
+                            "Default NASA Image",
+                            "https://apod.nasa.gov/apod/image/2001/STSCI-H-p2006a-h-1024x614.jpg"
+                        )
+                    } else {
+                        _pictureOfTodayEntity.value =
+                            NASAImageOfDayAPI.retrofitService.getImageInfo()
+                    }
                 } catch (e: Exception) {
                     _stateInfoShowing.value = "Error Happen In Fetching Internet Data."
                 }
             }
         } else {
             _stateInfoShowing.value = "No Internet Connection."
+        }
+    }
+
+    fun refreshListData(filter: AsteroidAPIFilter) {
+        if (filter != currentListFilter) {
+            _stateInfoShowing.value = "Refreshing List Data......"
+            currentListFilter = filter
+            when (filter) {
+                AsteroidAPIFilter.TODAY -> {
+                    _asteroidList.value =
+                        responseAsteroidList.value!!.filter { it.closeApproachDate == getTodayDateString() }
+                }
+                AsteroidAPIFilter.WEEK -> {
+                    _asteroidList.value =
+                        responseAsteroidList.value!!.filter { it.closeApproachDate == getTodayDateString() }
+                }
+                else -> {
+                    _asteroidList.value = responseAsteroidList.value
+                }
+            }
         }
     }
 

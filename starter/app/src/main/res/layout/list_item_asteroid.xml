@@ -26,17 +26,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/asteroid_name_TV"
-                style="@style/listItemText"
+                style="@style/list_item_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{asteroid.codename}"/>
 
             <TextView
                 android:id="@+id/asteroid_date_TV"
-                style="@style/listItemText"
+                style="@style/list_item_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{asteroid.closeApproachDate}"/>

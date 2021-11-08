@@ -2,6 +2,7 @@ package com.udacity.asteroidradar.main
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -12,6 +13,7 @@ import androidx.navigation.findNavController
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.api.isNetworkAvailable
+import com.udacity.asteroidradar.data.AsteroidAPIFilter
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 import kotlinx.coroutines.processNextEventInCurrentThread
 
@@ -27,8 +29,10 @@ class MainFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
     private lateinit var viewModelFactory: MainViewModelFactory
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
         application = requireNotNull(this.activity).application
         initBindingAndVM()
@@ -60,18 +64,27 @@ class MainFragment : Fragment() {
     }
 
     private fun initVMConnection() {
-        viewModel.responseAsteroidList.observe(viewLifecycleOwner, Observer { adapter.submitList(it) } )
-        viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer { asteroid -> asteroid?.let {
-            this.view?.findNavController()?.navigate(MainFragmentDirections.actionShowDetail(asteroid))
-            viewModel.doneNavigation() }
+        viewModel.asteroidList.observe(
+            viewLifecycleOwner,
+            Observer { adapter.submitList(it) })
+        viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer { asteroid ->
+            asteroid?.let {
+                this.view?.findNavController()
+                    ?.navigate(MainFragmentDirections.actionShowDetail(asteroid))
+                viewModel.doneNavigation()
+            }
         })
-        viewModel.pictureOfDay.observe(viewLifecycleOwner, Observer { picture -> picture?.let {
-            Picasso.with(context).load(picture.url).into(binding.activityMainImageOfTheDay)
-            //Picasso.get().load(picture.url).into(binding.activityMainImageOfTheDay)
-        } })
-        viewModel.stateInfoShowing.observe(viewLifecycleOwner, Observer { stateInfo -> stateInfo?.let {
-            Toast.makeText(context, stateInfo, Toast.LENGTH_SHORT).show()
-        } })
+        viewModel.pictureOfDay.observe(viewLifecycleOwner, Observer { picture ->
+            picture?.let {
+                //Picasso.with(context).load(picture.url).into(binding.activityMainImageOfTheDay)
+                Picasso.get().load(picture.url).into(binding.activityMainImageOfTheDay)
+            }
+        })
+        viewModel.stateInfoShowing.observe(viewLifecycleOwner, Observer { stateInfo ->
+            stateInfo?.let {
+                Toast.makeText(context, stateInfo, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
 
@@ -84,6 +97,11 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.show_week_menu_item -> viewModel.refreshListData(AsteroidAPIFilter.WEEK)
+            R.id.show_today_menu_item -> viewModel.refreshListData(AsteroidAPIFilter.TODAY)
+            else -> viewModel.refreshListData(AsteroidAPIFilter.SAVED)
+        }
         return true
     }
 

@@ -45,7 +45,7 @@ class DetailFragment : Fragment() {
     // The function is usd to pop up a dialog.
     private fun displayAstronomicalUnitExplanationDialog() {
         val builder = AlertDialog.Builder(requireActivity())
-            .setMessage(getString(R.string.astronomica_unit_explanation))
+            .setMessage(getString(R.string.astronomical_unit_explanation))
             .setPositiveButton(android.R.string.ok, null)
         builder.create().show()
     }

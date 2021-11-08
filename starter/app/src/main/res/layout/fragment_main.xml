@@ -19,7 +19,8 @@
             android:layout_height="220dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@{viewModel.pictureOfDay.title}">
 
             <ImageView
                 android:id="@+id/activity_main_image_of_the_day"
@@ -34,12 +35,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="#55010613"
                 android:padding="16dp"
-                android:text="@string/image_of_the_day"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                style="@style/picture_of_day_title"
+                android:text="@{viewModel.pictureOfDay.title}" />
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -49,7 +47,6 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/activity_main_image_of_the_day_layout"
             app:layout_constraintVertical_bias="0.0" />

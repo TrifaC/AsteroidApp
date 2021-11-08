@@ -8,8 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="listItemText">
+    <style name="list_item_title_text">
         <item name="android:textColor">@color/default_text_color</item>
+        <item name="android:textSize">@dimen/list_item_title_text_size</item>
+    </style>
+
+    <style name="list_item_text">
+        <item name="android:textColor">@color/default_text_color</item>
+        <item name="android:textSize">@dimen/list_item_text_size</item>
+    </style>
+
+    <style name="picture_of_day_title">
+        <item name="background">@color/image_of_day_text_background</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/image_of_day_text_size</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

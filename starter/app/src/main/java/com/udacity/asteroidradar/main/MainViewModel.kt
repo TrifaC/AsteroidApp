@@ -43,11 +43,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val stateInfoShowing: LiveData<String?>
         get() = _stateInfoShowing
 
-    // The list contain the data will show in the asteroid list
-    private val _asteroidList = MutableLiveData<List<Asteroid>>()
-    val asteroidList: LiveData<List<Asteroid>>
-        get() = _asteroidList
-
 
 //------------------------------------- Init Block -------------------------------------------------
 
@@ -56,7 +51,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         getAppDataProperty()
     }
 
-    private val responseAsteroidList = asteroidsRepository.asteroids
+    private val _responseAsteroidList = MutableList<List<Asteroid>>()
+    val responseAsteroidList: LiveData<List<Asteroid>> = asteroidsRepository.asteroids
+        get() = _responseAsteroidList
 
 
 //------------------------------------- Image Update Function --------------------------------------
@@ -94,15 +91,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             currentListFilter = filter
             when (filter) {
                 AsteroidAPIFilter.TODAY -> {
-                    _asteroidList.value =
+                    responseAsteroidList.value =
                         responseAsteroidList.value!!.filter { it.closeApproachDate == getTodayDateString() }
                 }
                 AsteroidAPIFilter.WEEK -> {
-                    _asteroidList.value =
+                    responseAsteroidList.value =
                         responseAsteroidList.value!!.filter { it.closeApproachDate == getTodayDateString() }
                 }
                 else -> {
-                    _asteroidList.value = responseAsteroidList.value
+                    responseAsteroidList.value = responseAsteroidList.value
                 }
             }
         }

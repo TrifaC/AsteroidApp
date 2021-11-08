@@ -64,7 +64,7 @@ class MainFragment : Fragment() {
     }
 
     private fun initVMConnection() {
-        viewModel.asteroidList.observe(
+        viewModel.responseAsteroidList.observe(
             viewLifecycleOwner,
             Observer { adapter.submitList(it) })
         viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer { asteroid ->

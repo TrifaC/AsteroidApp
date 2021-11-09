@@ -29,6 +29,8 @@ class MainFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
     private lateinit var viewModelFactory: MainViewModelFactory
 
+    private var currentFilter: AsteroidAPIFilter? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,7 +68,11 @@ class MainFragment : Fragment() {
     private fun initVMConnection() {
         viewModel.responseAsteroidList.observe(
             viewLifecycleOwner,
-            Observer { adapter.submitList(it) })
+            Observer { updateShowingList() })
+        viewModel.asteroidShowingList.observe(
+            viewLifecycleOwner,
+            Observer { adapter.submitList(it) }
+        )
         viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer { asteroid ->
             asteroid?.let {
                 this.view?.findNavController()
@@ -85,6 +91,10 @@ class MainFragment : Fragment() {
                 Toast.makeText(context, stateInfo, Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun updateShowingList() {
+        viewModel.refreshListData(currentFilter)
     }
 
 

@@ -13,8 +13,11 @@ import com.udacity.asteroidradar.data.AsteroidAPIFilter
 import com.udacity.asteroidradar.data.PictureOfDay
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidsRepository
+import com.udacity.asteroidradar.utils.Constants
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * The View Model to store data in main fragment.
@@ -43,6 +46,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val stateInfoShowing: LiveData<String?>
         get() = _stateInfoShowing
 
+    // The list for showing
+    private val _asteroidShowingList = MutableLiveData<List<Asteroid>>()
+    val asteroidShowingList: LiveData<List<Asteroid>>
+        get() = _asteroidShowingList
+
 
 //------------------------------------- Init Block -------------------------------------------------
 
@@ -51,9 +59,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         getAppDataProperty()
     }
 
-    private val _responseAsteroidList = MutableList<List<Asteroid>>()
-    val responseAsteroidList: LiveData<List<Asteroid>> = asteroidsRepository.asteroids
-        get() = _responseAsteroidList
+    val responseAsteroidList = asteroidsRepository.asteroids
 
 
 //------------------------------------- Image Update Function --------------------------------------
@@ -85,21 +91,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun refreshListData(filter: AsteroidAPIFilter) {
+    fun refreshListData(filter: AsteroidAPIFilter?) {
         if (filter != currentListFilter) {
             _stateInfoShowing.value = "Refreshing List Data......"
-            currentListFilter = filter
+            filter?.let { currentListFilter = it }
             when (filter) {
                 AsteroidAPIFilter.TODAY -> {
-                    responseAsteroidList.value =
+                    _asteroidShowingList.value =
                         responseAsteroidList.value!!.filter { it.closeApproachDate == getTodayDateString() }
                 }
                 AsteroidAPIFilter.WEEK -> {
-                    responseAsteroidList.value =
-                        responseAsteroidList.value!!.filter { it.closeApproachDate == getTodayDateString() }
+                    _asteroidShowingList.value =
+                        responseAsteroidList.value!!.filter {
+                            timeString2Milli(it.closeApproachDate) > timeString2Milli(
+                                getTodayDateString()
+                            )
+                        }
                 }
                 else -> {
-                    responseAsteroidList.value = responseAsteroidList.value
+                    _asteroidShowingList.value = responseAsteroidList.value
                 }
             }
         }
@@ -117,5 +127,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _navigateToDetail.value = null
     }
 
+
+//------------------------------------- Support Functions ------------------------------------------
+
+
+    private fun timeString2Milli(timeString: String): Long {
+        val simpleDateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT)
+        val date: Date? = simpleDateFormat.parse(timeString)
+        return date!!.time
+    }
 
 }

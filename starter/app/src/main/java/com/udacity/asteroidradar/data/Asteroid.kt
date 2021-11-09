@@ -6,6 +6,15 @@ import kotlinx.android.parcel.Parcelize
 /**
  * The data class contain a Asteroid data.
  * (Parcelize makes it can be passed between fragment or activity.)
+ *
+ * @param id of asteroid
+ * @param codename of asteroid
+ * @param closeApproachDate of asteroid
+ * @param absoluteMagnitude of asteroid
+ * @param estimatedDiameter of asteroid
+ * @param relativeVelocity of asteroid
+ * @param distanceFromEarth of asteroid
+ * @param isPotentiallyHazardous of asteroid
  * */
 @Parcelize
 data class Asteroid(

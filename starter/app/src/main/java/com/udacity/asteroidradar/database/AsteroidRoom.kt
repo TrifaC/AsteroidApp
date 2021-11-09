@@ -4,26 +4,35 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
+
+//************************************* DAO ********************************************************
+
+
 /**
- * The DAO give the method for database which can be used to do some interactions.
+ * The DAO give the method for Asteroid database to interact with UI data and Internet data.
  * */
 @Dao
 interface AsteroidDao {
     /**
      * Return the list of asteroids from database.
-     * Add live data which make the data can update automatically.
+     *
+     * @return a List of database Asteroid Entity which is a LiveData.
      * */
     @Query("select * from databaseasteroidentity")
     fun getAsteroids(): LiveData<List<DatabaseAsteroidEntity>>
 
     /**
      * Insert the asteroid data into local data base.
+     *
+     * @param asteroids will be inserted into database asteroid list.
      * */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg asteroids: DatabaseAsteroidEntity)
-
-
 }
+
+
+//************************************* Database ***************************************************
+
 
 /**
  * The database contains the entities of the asteroids and use the DAO to do interaction.
@@ -36,7 +45,10 @@ abstract class AsteroidDatabase : RoomDatabase() {
 private lateinit var INSTANCE: AsteroidDatabase
 
 /**
- * The method to get the asteroid database.
+ * Get method for asteroid database.
+ *
+ * @param mContext Context
+ * @return Asteroid Database
  * */
 fun getDatabase(mContext: Context): AsteroidDatabase {
     synchronized(AsteroidDatabase::class.java) {

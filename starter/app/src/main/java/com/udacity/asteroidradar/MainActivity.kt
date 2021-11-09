@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController)
     }
 
+    /**
+     * Method to enable the navigate up function in the app.
+     * */
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()
     }

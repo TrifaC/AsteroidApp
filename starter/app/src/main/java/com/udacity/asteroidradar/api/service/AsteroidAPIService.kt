@@ -16,12 +16,13 @@ import java.util.concurrent.TimeUnit
  */
 interface AsteroidAPIService {
     /**
-     * Returns a Retrofit callback that delivers a String
-     * The @GET annotation indicates that the "realestate" endpoint will be requested with the GET
-     * HTTP method
+     * Function to get the Asteroid List. The @GET annotation indicates that the "realestate"
+     * endpoint will be requested with the GET HTTP method.
+     *
+     * @return String of API fetching result.
      */
     @GET(Constants.FEED_PATH)
-    suspend fun getAsteroidsListAsync (
+    suspend fun getAsteroidsListAsync(
         @Query("start_date") startDate: String = getDatePairString().first,
         @Query("end_date") endDate: String = getDatePairString().second,
         @Query("api_key") apiKey: String = Constants.API_KEY
@@ -50,7 +51,8 @@ object AsteroidAPI {
         .baseUrl(Constants.BASE_URL)
         .client(client.build())
         .build()
+
     val retrofitService:
- AsteroidAPIService = retrofit.create(AsteroidAPIService::class.java)
+            AsteroidAPIService = retrofit.create(AsteroidAPIService::class.java)
 }
 

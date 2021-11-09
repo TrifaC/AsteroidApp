@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 class AsteroidsRepository(private val database: AsteroidDatabase) {
 
     /**
-     * The list of asteroid will be shown in the screen.
+     * The list of asteroid will be shown in the screen which getting from database.
      * */
     val asteroids: LiveData<List<Asteroid>> =
         Transformations.map(database.asteroidDao.getAsteroids()) { it.asDomainModel() }

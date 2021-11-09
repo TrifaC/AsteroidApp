@@ -55,16 +55,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 //------------------------------------- Init Block -------------------------------------------------
 
 
+    /**
+     * Init Block: To get data from Internet.
+     * */
     init {
         getAppDataProperty()
     }
-
     val responseAsteroidList = asteroidsRepository.asteroids
 
 
 //------------------------------------- Image Update Function --------------------------------------
 
 
+    /**
+     * Function to fetch the Internet data. The method will check the Internet connection first then
+     * give the notification for UI. Then the Image of Today will be the default one if the type is
+     * a video.
+     * */
     private fun getAppDataProperty() {
         if (isNetworkAvailable(getApplication())) {
             viewModelScope.launch {
@@ -76,7 +83,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         _pictureOfTodayEntity.value = PictureOfDay(
                             "image",
                             "Default NASA Image",
-                            "https://apod.nasa.gov/apod/image/2001/STSCI-H-p2006a-h-1024x614.jpg"
+                            Constants.IMAGE_URL
                         )
                     } else {
                         _pictureOfTodayEntity.value =
@@ -91,6 +98,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * The function to refresh the data will be shown in the UI list.
+     *
+     * @param filter will be used to show some specific list item.
+     * */
     fun refreshListData(filter: AsteroidAPIFilter?) {
         if (filter != currentListFilter) {
             _stateInfoShowing.value = "Refreshing List Data......"
@@ -119,10 +131,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 //------------------------------------- Event Trigger Functions ------------------------------------
 
 
+    /**
+     * Function will be called when list item has been clicked.
+     * */
     fun onAsteroidClicked(asteroid: Asteroid) {
         _navigateToDetail.value = asteroid
     }
 
+    /**
+     * Reset the parameter after navigation.
+     * */
     fun doneNavigation() {
         _navigateToDetail.value = null
     }
@@ -131,6 +149,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 //------------------------------------- Support Functions ------------------------------------------
 
 
+    /**
+     * Function to convert time string into milli second (Long)
+     * */
     private fun timeString2Milli(timeString: String): Long {
         val simpleDateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT)
         val date: Date? = simpleDateFormat.parse(timeString)

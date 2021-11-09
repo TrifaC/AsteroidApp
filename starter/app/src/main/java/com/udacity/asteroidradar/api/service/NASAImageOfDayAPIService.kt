@@ -17,7 +17,12 @@ import retrofit2.http.Query
 private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
 
-
+/**
+ * Function to get the Image of today. The @GET annotation indicates that the image
+ * endpoint will be requested with the GET HTTP method.
+ *
+ * @return Object instance of PictureOfDay.
+ */
 interface NASAImageOfDayAPIService {
     @GET(Constants.IMAGE_PATH)
     suspend fun getImageInfo(

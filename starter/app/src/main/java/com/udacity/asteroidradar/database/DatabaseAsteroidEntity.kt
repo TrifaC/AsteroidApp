@@ -4,6 +4,19 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.udacity.asteroidradar.data.Asteroid
 
+/**
+ * Data class: Store the database entity of asteroid.
+ *
+ * @param id of database asteroid entity (Primary Key)
+ * @param codename of database asteroid entity
+ * @param closeApproachDate of database asteroid entity
+ * @param absoluteMagnitude of database asteroid entity
+ * @param estimatedDiameter of database asteroid entity
+ * @param relativeVelocity of database asteroid entity
+ * @param distanceFromEarth of database asteroid entity
+ * @param isPotentiallyHazardous of database asteroid entity
+ *
+ * */
 @Entity
 data class DatabaseAsteroidEntity constructor(
     @PrimaryKey
@@ -17,7 +30,11 @@ data class DatabaseAsteroidEntity constructor(
     val isPotentiallyHazardous: Boolean
 )
 
-
+/**
+ * Function to convert List of database asteroid entity to domain objection
+ *
+ * @return List of [Asteroid]
+ * */
 fun List<DatabaseAsteroidEntity>.asDomainModel(): List<Asteroid> {
     return map {
         Asteroid(
